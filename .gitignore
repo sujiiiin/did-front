@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# .gitignore 파일에 추가하여 .env 파일이 GitHub에 올라가지 않도록 설정
+.env
