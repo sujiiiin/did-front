@@ -25,9 +25,9 @@ const SocialKakao = () => {
         alert('DID 인증 실패');
       }
     } else {
-      // MetaMask가 설치되어 있지 않으면 설치 페이지로 이동
-      alert('MetaMask가 설치되어 있지 않습니다. 설치 페이지로 이동합니다.');
-      window.location.href = 'https://metamask.io/download.html';
+      // MetaMask가 설치되지 않은 경우 설치 페이지로 리디렉트
+      alert('MetaMask가 설치되어 있지 않습니다. MetaMask 설치 페이지로 이동합니다.');
+      window.location.href = 'https://metamask.io/download.html'; // MetaMask 설치 페이지로 이동
     }
   };
 
