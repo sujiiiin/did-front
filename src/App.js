@@ -90,7 +90,7 @@ const SocialKakao = () => {
   };
 
   // DID 주소와 카카오 로그인 토큰을 백엔드로 전송
-  const sendAuthDataToBackend = async (didAddress, token) => {
+  const sendAuthDataToBackend = async (userDid, userToken) => {
     try {
       const response = await fetch('https://www.mongoljune.shop/issue-vc', { // 통합된 백엔드 URL
         method: 'POST',
@@ -98,17 +98,19 @@ const SocialKakao = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          didAddress: didAddress,
-          token: token,
+          userDid: userDid,
+          userToken: userToken,
         }),
       });
 
       const data = await response.json();
-      if (data.success) {
+      console.log('백엔드 응답 데이터:', data); // 응답 데이터 확인
+
+      if (data.vcJwt) {
         console.log('DID 주소와 토큰이 성공적으로 백엔드로 전송되었습니다.');
         setVcJwt(data.vcJwt); // 백엔드로부터 받은 vcJwt 값을 상태에 저장
       } else {
-        console.error('백엔드 처리 실패:', data.message);
+        console.error('백엔드 처리 실패:', data.message || '알 수 없는 오류');
       }
     } catch (error) {
       console.error('백엔드 서버 전송 중 오류:', error);
@@ -145,11 +147,13 @@ const SocialKakao = () => {
       />
 
       {/* vcJwt 값 표시 */}
-      {vcJwt && (
+      {vcJwt ? (
         <div>
           <h2>발급된 VC JWT:</h2>
           <p>{vcJwt}</p>
         </div>
+      ) : (
+        <p>vcJwt 값을 기다리는 중입니다...</p>
       )}
 
       {/* 에러 메시지 표시 */}
