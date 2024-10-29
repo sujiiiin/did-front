@@ -9,12 +9,11 @@ const SocialKakao = () => {
   const [authCode, setAuthCode] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [kakaoToken, setKakaoToken] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+  const [isLoading, setIsLoading] = useState(false);
 
-  // 카카오 로그인
-  const Rest_api_key = process.env.REACT_APP_KAKAO_REST_API_KEY; 
+  const Rest_api_key = process.env.REACT_APP_KAKAO_REST_API_KEY;
   const redirect_uri = process.env.REACT_APP_REDIRECT_URI;
-  
+
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
 
   const handleKakaoLogin = () => {
@@ -62,7 +61,6 @@ const SocialKakao = () => {
     }
   };
 
-  // MetaMask를 통한 DID 인증
   const authenticateWithDID = async () => {
     if (typeof window.ethereum !== 'undefined') {
       try {
@@ -87,11 +85,10 @@ const SocialKakao = () => {
     }
   };
 
-  // DID 주소와 카카오 로그인 토큰을 백엔드로 전송
   const sendAuthDataToBackend = async (userDid, userToken) => {
     setIsLoading(true); // 로딩 상태 시작
     try {
-      const response = await fetch('https://www.mongoljune.shop/issue-vc', { // 통합된 백엔드 URL
+      const response = await fetch('https://www.mongoljune.shop/issue-vc', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,13 +100,16 @@ const SocialKakao = () => {
       });
 
       const data = await response.json();
-      console.log('백엔드 응답 데이터:', data); // 응답 데이터 확인
+      console.log('백엔드 응답 데이터:', data);
 
       if (data.vcJwt) {
         console.log('DID 주소와 토큰이 성공적으로 백엔드로 전송되었습니다.');
         
         // vcJwt를 Local Storage에 저장
         localStorage.setItem('vcJwt', data.vcJwt);
+
+        // vcJwt 검증 함수 호출
+        verifyVcJwt(data.vcJwt);
       } else {
         console.error('백엔드 처리 실패:', data.message || '알 수 없는 오류');
       }
@@ -117,6 +117,44 @@ const SocialKakao = () => {
       console.error('백엔드 서버 전송 중 오류:', error);
     } finally {
       setIsLoading(false); // 로딩 상태 종료
+    }
+  };
+
+  const verifyVcJwt = async (vcJwt) => {
+    try {
+      const response = await fetch('https://www.mongoljune.shop/verify-vc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ vcJwt: vcJwt }),
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log("vcJwt 검증 성공");
+
+        // username을 Local Storage에 저장
+        localStorage.setItem('username', data.username);
+
+        // 새로운 페이지로 리다이렉트
+        window.location.href = "/username.html";
+      } else if (response.status === 500) {
+        console.error("vcJwt 검증 실패: 다시 로그인해야 합니다.");
+        
+        // Local Storage 값 제거
+        localStorage.removeItem('vcJwt');
+        localStorage.removeItem('username');
+        
+        // 페이지 새로 고침하여 처음부터 다시 시작
+        window.location.reload();
+      } else {
+        console.error("예상치 못한 오류 발생");
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
+      }
+    } catch (error) {
+      console.error("vcJwt 검증 중 오류 발생:", error);
+      setErrorMessage("vcJwt 검증 중 오류가 발생했습니다.");
     }
   };
 

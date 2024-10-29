@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>인증 성공 페이지</title>
+  <script>
+    // 페이지가 로드되면 Local Storage에서 username 가져와 표시
+    window.onload = function() {
+      const username = localStorage.getItem('username');
+      if (username) {
+        document.getElementById('username').innerText = `환영합니다, ${username}님!`;
+      } else {
+        document.getElementById('username').innerText = '사용자 정보를 가져오는 중 오류가 발생했습니다.';
+      }
+    };
+  </script>
+</head>
+<body>
+  <h1>인증 성공 페이지</h1>
+  <p id="username">사용자 정보를 가져오는 중입니다...</p>
+</body>
+</html>
