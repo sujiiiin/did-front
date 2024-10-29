@@ -9,31 +9,7 @@ const SocialKakao = () => {
   const [authCode, setAuthCode] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [kakaoToken, setKakaoToken] = useState(null);
-  const [vcJwt, setVcJwt] = useState(null); // 백엔드로부터 받은 vcJwt를 저장하는 상태 추가
-
-  // MetaMask를 통한 DID 인증
-  const authenticateWithDID = async () => {
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await provider.send("eth_requestAccounts", []);
-        const signer = await provider.getSigner();
-        const address = await signer.getAddress();
-        setUserAddress(address);
-        setIsAuthenticated(true);
-        alert(`DID 인증 성공: ${address}`);
-        if (kakaoToken) {
-          sendAuthDataToBackend(address, kakaoToken); // DID 주소와 토큰을 함께 전송
-        }
-      } catch (error) {
-        console.error("DID 인증 실패:", error);
-        alert('DID 인증 실패');
-      }
-    } else {
-      alert('MetaMask가 설치되어 있지 않습니다. MetaMask 설치 페이지로 이동합니다.');
-      window.location.href = 'https://metamask.io/download.html';
-    }
-  };
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
 
   // 카카오 로그인
   const Rest_api_key = process.env.REACT_APP_KAKAO_REST_API_KEY; 
@@ -75,9 +51,6 @@ const SocialKakao = () => {
         if (tokenData.access_token) {
           console.log("로그인 토큰 발급 성공");
           setKakaoToken(tokenData.access_token);
-          if (isAuthenticated) {
-            sendAuthDataToBackend(userAddress, tokenData.access_token); // DID 주소와 토큰을 함께 전송
-          }
         } else {
           setErrorMessage(`토큰 발급 실패: ${JSON.stringify(tokenData)}`);
           console.error("로그인 토큰 발급 실패:", tokenData);
@@ -89,8 +62,34 @@ const SocialKakao = () => {
     }
   };
 
+  // MetaMask를 통한 DID 인증
+  const authenticateWithDID = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+        const address = await signer.getAddress();
+        setUserAddress(address);
+        setIsAuthenticated(true);
+        alert(`DID 인증 성공: ${address}`);
+
+        if (kakaoToken) {
+          sendAuthDataToBackend(address, kakaoToken); // DID 주소와 토큰을 함께 전송
+        }
+      } catch (error) {
+        console.error("DID 인증 실패:", error);
+        alert('DID 인증 실패');
+      }
+    } else {
+      alert('MetaMask가 설치되어 있지 않습니다. MetaMask 설치 페이지로 이동합니다.');
+      window.location.href = 'https://metamask.io/download.html';
+    }
+  };
+
   // DID 주소와 카카오 로그인 토큰을 백엔드로 전송
   const sendAuthDataToBackend = async (userDid, userToken) => {
+    setIsLoading(true); // 로딩 상태 시작
     try {
       const response = await fetch('https://www.mongoljune.shop/issue-vc', { // 통합된 백엔드 URL
         method: 'POST',
@@ -108,12 +107,16 @@ const SocialKakao = () => {
 
       if (data.vcJwt) {
         console.log('DID 주소와 토큰이 성공적으로 백엔드로 전송되었습니다.');
-        setVcJwt(data.vcJwt); // 백엔드로부터 받은 vcJwt 값을 상태에 저장
+        
+        // vcJwt를 Local Storage에 저장
+        localStorage.setItem('vcJwt', data.vcJwt);
       } else {
         console.error('백엔드 처리 실패:', data.message || '알 수 없는 오류');
       }
     } catch (error) {
       console.error('백엔드 서버 전송 중 오류:', error);
+    } finally {
+      setIsLoading(false); // 로딩 상태 종료
     }
   };
 
@@ -129,14 +132,7 @@ const SocialKakao = () => {
 
   return (
     <div className="container">
-      <h1>MetaMask DID 인증 및 카카오 로그인</h1>
-
-      {/* MetaMask DID 인증 */}
-      {!isAuthenticated ? (
-        <button onClick={authenticateWithDID}>MetaMask로 DID 인증</button>
-      ) : (
-        <p>인증된 DID 주소: {userAddress}</p>
-      )}
+      <h1>카카오 로그인 및 MetaMask DID 인증</h1>
 
       {/* 카카오 로그인 */}
       <img
@@ -146,15 +142,16 @@ const SocialKakao = () => {
         style={{ cursor: 'pointer', width: '300px' }}
       />
 
-      {/* vcJwt 값 표시 */}
-      {vcJwt ? (
-        <div>
-          <h2>발급된 VC JWT:</h2>
-          <p>{vcJwt}</p>
-        </div>
-      ) : (
-        <p>vcJwt 값을 기다리는 중입니다...</p>
+      {/* MetaMask DID 인증 버튼은 카카오 토큰이 있을 때만 표시 */}
+      {kakaoToken && !isAuthenticated && (
+        <button onClick={authenticateWithDID}>MetaMask로 DID 인증</button>
       )}
+
+      {/* 인증된 DID 주소 표시 */}
+      {isAuthenticated && <p>인증된 DID 주소: {userAddress}</p>}
+
+      {/* 로딩 상태 표시 */}
+      {isLoading && <p>vcJwt를 가져오는 중입니다...</p>}
 
       {/* 에러 메시지 표시 */}
       {errorMessage && <p style={{color: 'red'}}>에러: {errorMessage}</p>}
