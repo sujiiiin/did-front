@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import './App.css'; // 스타일 시트 추가
-import kakaoLoginImage from './kakao_login_large_wide.png'; // 이미지 경로 설정
+import './App.css';
+import kakaoLoginImage from './kakao_login_large_wide.png';
 
 const SocialKakao = () => {
   const [userAddress, setUserAddress] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authCode, setAuthCode] = useState(null); // 인가 코드 저장
-  const [errorMessage, setErrorMessage] = useState(null); // 에러 메시지 저장
+  const [authCode, setAuthCode] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [kakaoToken, setKakaoToken] = useState(null); // 카카오 로그인 토큰 상태 추가
 
   // MetaMask를 통한 DID 인증
   const authenticateWithDID = async () => {
@@ -20,14 +21,38 @@ const SocialKakao = () => {
         setUserAddress(address);
         setIsAuthenticated(true);
         alert(`DID 인증 성공: ${address}`);
+        sendDIDToBackend(address); // 인증된 DID 주소를 백엔드로 전송
       } catch (error) {
         console.error("DID 인증 실패:", error);
         alert('DID 인증 실패');
       }
     } else {
-      // MetaMask가 설치되지 않은 경우 설치 페이지로 리디렉트
       alert('MetaMask가 설치되어 있지 않습니다. MetaMask 설치 페이지로 이동합니다.');
-      window.location.href = 'https://metamask.io/download.html'; // MetaMask 설치 페이지로 이동
+      window.location.href = 'https://metamask.io/download.html';
+    }
+  };
+
+  // 인증된 DID 주소를 백엔드로 전송
+  const sendDIDToBackend = async (address) => {
+    try {
+      const response = await fetch('http://localhost:4000/api/did', { // 백엔드 URL 설정
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          didAddress: address, // DID 주소를 전송
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        console.log('DID 주소가 성공적으로 백엔드로 전송되었습니다.');
+      } else {
+        console.error('백엔드 DID 주소 처리 실패:', data.message);
+      }
+    } catch (error) {
+      console.error('백엔드 서버 전송 중 오류:', error);
     }
   };
 
@@ -35,26 +60,22 @@ const SocialKakao = () => {
   const Rest_api_key = process.env.REACT_APP_KAKAO_REST_API_KEY; 
   const redirect_uri = process.env.REACT_APP_REDIRECT_URI;
   
-  // 카카오 OAuth 요청 URL
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
 
   const handleKakaoLogin = () => {
-    // 카카오 로그인 페이지로 리다이렉트
     window.location.href = kakaoURL;
   };
 
-  // 인가 코드 추출
   const extractAuthCode = () => {
     const code = new URL(window.location.href).searchParams.get("code");
     if (code) {
-      setAuthCode(code); // 인가 코드 저장
+      setAuthCode(code);
       console.log('인가 코드 추출 성공:', code);
     } else {
       console.log('인가 코드가 없습니다.');
     }
   };
 
-  // 로그인 토큰 발급
   const requestKakaoToken = async () => {
     if (authCode) {
       try {
@@ -65,17 +86,16 @@ const SocialKakao = () => {
           },
           body: new URLSearchParams({
             grant_type: 'authorization_code',
-            client_id: Rest_api_key, // REST API 키
-            redirect_uri: redirect_uri, // 설정된 Redirect URL
-            code: authCode, // 인가 코드
+            client_id: Rest_api_key,
+            redirect_uri: redirect_uri,
+            code: authCode,
           }),
         });
 
         const tokenData = await tokenResponse.json();
         if (tokenData.access_token) {
           console.log("로그인 토큰 발급 성공");
-
-          // 로그인 토큰을 백엔드로 전송
+          setKakaoToken(tokenData.access_token); // 발급된 토큰을 상태에 저장하여 화면에 표시
           sendTokenToBackend(tokenData.access_token);
         } else {
           setErrorMessage(`토큰 발급 실패: ${JSON.stringify(tokenData)}`);
@@ -88,16 +108,15 @@ const SocialKakao = () => {
     }
   };
 
-  // 백엔드로 토큰 전송
   const sendTokenToBackend = async (token) => {
     try {
-      const response = await fetch('http://localhost:4000/api/kakao/token', { // 백엔드 URL 설정
+      const response = await fetch('http://localhost:4000/api/kakao/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          token: token, // 로그인 토큰을 전송
+          token: token,
         }),
       });
 
@@ -112,12 +131,10 @@ const SocialKakao = () => {
     }
   };
 
-  // 컴포넌트가 로드될 때 인가 코드 추출
   useEffect(() => {
     extractAuthCode();
   }, []);
 
-  // 인가 코드가 변경되면 로그인 토큰 요청
   useEffect(() => {
     if (authCode) {
       requestKakaoToken();
@@ -142,6 +159,11 @@ const SocialKakao = () => {
         onClick={handleKakaoLogin}
         style={{ cursor: 'pointer', width: '300px' }}
       />
+
+      {/* 발급된 카카오 로그인 토큰 표시 */}
+      {kakaoToken && (
+        <p>카카오 로그인 토큰: {kakaoToken}</p>
+      )}
 
       {/* 에러 메시지 표시 */}
       {errorMessage && <p style={{color: 'red'}}>에러: {errorMessage}</p>}
