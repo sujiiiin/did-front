@@ -9,6 +9,7 @@ const SocialKakao = () => {
   const [authCode, setAuthCode] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [kakaoToken, setKakaoToken] = useState(null);
+  const [vcJwt, setVcJwt] = useState(null); // 백엔드로부터 받은 vcJwt를 저장하는 상태 추가
 
   // MetaMask를 통한 DID 인증
   const authenticateWithDID = async () => {
@@ -105,6 +106,7 @@ const SocialKakao = () => {
       const data = await response.json();
       if (data.success) {
         console.log('DID 주소와 토큰이 성공적으로 백엔드로 전송되었습니다.');
+        setVcJwt(data.vcJwt); // 백엔드로부터 받은 vcJwt 값을 상태에 저장
       } else {
         console.error('백엔드 처리 실패:', data.message);
       }
@@ -141,6 +143,14 @@ const SocialKakao = () => {
         onClick={handleKakaoLogin}
         style={{ cursor: 'pointer', width: '300px' }}
       />
+
+      {/* vcJwt 값 표시 */}
+      {vcJwt && (
+        <div>
+          <h2>발급된 VC JWT:</h2>
+          <p>{vcJwt}</p>
+        </div>
+      )}
 
       {/* 에러 메시지 표시 */}
       {errorMessage && <p style={{color: 'red'}}>에러: {errorMessage}</p>}
