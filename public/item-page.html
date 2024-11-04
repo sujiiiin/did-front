@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>항목 상세 페이지</title>
+  <style>
+    /* body 스타일 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+
+    /* 전체 컨테이너 */
+    .container {
+      width: 402px;
+      height: 874px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* 헤더 스타일 */
+    .header {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* 항목 이름 스타일 */
+    .item-name {
+      font-size: 1.8rem;
+      color: #555;
+      margin: 20px 0;
+    }
+  </style>
+  <script>
+    window.onload = function() {
+      // URL에서 item 파라미터 가져오기
+      const params = new URLSearchParams(window.location.search);
+      const itemName = params.get('item'); // "item" 파라미터 값을 가져옴
+
+      if (itemName) {
+        // 항목 이름을 itemName으로 설정
+        document.getElementById('item-name').innerText = itemName;
+      }
+    };
+  </script>
+</head>
+<body>
+
+  <!-- 전체 컨테이너 -->
+  <div class="container">
+    <!-- 헤더 -->
+    <div class="header">캐치! 보안핑</div>
+
+    <!-- 항목 이름 표시 -->
+    <div class="item-name" id="item-name">항목 이름</div>
+  </div>
+
+</body>
+</html>
