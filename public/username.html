@@ -71,6 +71,7 @@
       padding: 20px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       text-align: center;
+      position: relative;
       cursor: pointer;
     }
 
@@ -107,9 +108,14 @@
       }
     };
 
-    // 각 항목을 클릭할 때 해당 항목 이름을 item-page.html로 전달하는 함수
+    // 각 항목 박스를 클릭할 때 해당 항목 이름을 item-page.html로 전달하는 함수
     function navigateToItemPage(itemName) {
       window.location.href = `/item-page.html?item=${encodeURIComponent(itemName)}`;
+    }
+
+    // 각 항목의 점 3개를 클릭할 때 settings.html로 이동
+    function navigateToSettings(itemName) {
+      window.location.href = `/settings.html?item=${encodeURIComponent(itemName)}`;
     }
 
     // 항목 추가 버튼을 클릭할 때 add-item.html로 이동
@@ -136,15 +142,19 @@
     <!-- IoT 항목 섹션 -->
     <div class="iot-section">
       <div class="iot-box" onclick="navigateToItemPage('거실')">
+        <div class="dots" onclick="event.stopPropagation(); navigateToSettings('거실')">⋮</div>
         <h3>거실</h3>
       </div>
       <div class="iot-box" onclick="navigateToItemPage('안방')">
+        <div class="dots" onclick="event.stopPropagation(); navigateToSettings('안방')">⋮</div>
         <h3>안방</h3>
       </div>
       <div class="iot-box" onclick="navigateToItemPage('독서실')">
+        <div class="dots" onclick="event.stopPropagation(); navigateToSettings('독서실')">⋮</div>
         <h3>독서실</h3>
       </div>
       <div class="iot-box" onclick="navigateToItemPage('회사')">
+        <div class="dots" onclick="event.stopPropagation(); navigateToSettings('회사')">⋮</div>
         <h3>회사</h3>
       </div>
     </div>
