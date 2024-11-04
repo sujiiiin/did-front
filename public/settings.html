@@ -3,99 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IoT 항목 설정</title>
+  <title>설정 페이지</title>
   <style>
-    /* body 스타일: 회색 배경 */
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0; /* 배경 회색 */
-      font-family: Arial, sans-serif;
-      color: #333;
-    }
-
-    /* 전체 컨테이너 */
-    .container {
-      width: 402px; /* 고정된 가로 크기 */
-      height: 874px; /* 고정된 세로 크기 */
-      background-color: #ffffff; /* 본문 흰색 */
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    /* 항목 제목 */
-    .item-title {
-      font-size: 2rem;
-      margin-bottom: 30px;
-      text-align: center;
-    }
-
-    /* 입력 폼 스타일 */
-    .form-group {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-size: 1.1rem;
-      margin-bottom: 5px;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
-    }
-
-    /* 체크박스 스타일 */
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .checkbox-group input[type="checkbox"] {
-      margin-right: 10px;
-    }
-
-    /* 페이지 하단 버튼 */
-    .button {
-      width: 100%;
-      padding: 15px;
-      font-size: 1rem;
-      color: #fff;
-      background-color: #6200EA;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: auto;
-      text-align: center;
-      transition: background-color 0.3s ease;
-    }
-
-    .button:hover {
-      background-color: #3700B3;
-    }
+    /* 기존 스타일 그대로 유지 */
   </style>
+  <script>
+    // URL 파라미터에서 항목 이름을 가져와서 표시하는 함수
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const itemName = params.get('item');
+      if (itemName) {
+        document.getElementById('item-title').innerText = itemName;
+      }
+
+      // 이전 버튼 동작 설정
+      document.getElementById('back-button').onclick = function() {
+        window.location.href = '/username.html';
+      };
+    };
+
+    // 네트워크 이름과 주소를 백엔드로 전송하는 함수
+    async function saveAndReturn() {
+      const networkName = document.getElementById('network-name').value;
+      const networkAddress = document.getElementById('network-address').value;
+
+      // 백엔드로 보낼 데이터 객체 생성
+      const data = {
+        networkName: networkName,
+        networkAddress: networkAddress,
+      };
+
+      try {
+        // 백엔드로 POST 요청 보내기
+        const response = await fetch('https://your-backend-url.com/api/saveNetwork', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        // 응답 처리
+        if (response.ok) {
+          alert('네트워크 정보가 성공적으로 저장되었습니다.');
+          window.location.href = '/username.html'; // 성공 시 username.html로 이동
+        } else {
+          alert('네트워크 정보 저장에 실패했습니다.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('서버 요청 중 오류가 발생했습니다.');
+      }
+    }
+  </script>
 </head>
 <body>
 
   <!-- 전체 컨테이너 -->
   <div class="container">
-    <!-- 항목 이름 -->
-    <h2 class="item-title">항목 이름</h2>
+    <!-- 항목 제목 -->
+    <h2 class="item-title" id="item-title">설정 항목</h2>
 
     <!-- 네트워크 이름 입력 -->
     <div class="form-group">
@@ -121,8 +88,11 @@
       <label for="security-activation">보안 활성화</label>
     </div>
 
+    <!-- 이전 버튼 -->
+    <button class="back-button" id="back-button">이전</button>
+
     <!-- 저장 버튼 -->
-    <button class="button">저장</button>
+    <button class="button" id="save-button" onclick="saveAndReturn()">저장</button>
   </div>
 
 </body>

@@ -5,97 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>캐치! 보안핑</title>
   <style>
-    /* body 스타일: 회색 배경 */
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0; /* 배경 회색 */
-      font-family: Arial, sans-serif;
-      color: #333;
-    }
-
-    /* 전체 컨테이너 */
-    .container {
-      width: 402px; /* 고정된 가로 크기 */
-      height: 874px; /* 고정된 세로 크기 */
-      background-color: #ffffff; /* 본문 흰색 */
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    /* 헤더 스타일 */
-    .header {
-      text-align: center;
-      font-size: 2.5rem;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    /* 사용자 정보와 IoT 정보가 포함된 단일 카드 */
-    .info-card {
-      background-color: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    .info-card h2 {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-    }
-
-    /* 하단 박스 영역 */
-    .iot-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr; /* 2개씩 2줄 배치 */
-      gap: 15px;
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    .iot-box {
-      background-color: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      position: relative;
-    }
-
-    /* 박스 제목 */
-    .iot-box h3 {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-    }
-
-    /* 점 3개 메뉴 */
-    .dots {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      cursor: pointer;
-      font-size: 1.5rem;
-    }
-
-    /* 플러스 버튼 */
-    .plus-button {
-      cursor: pointer;
-      font-size: 1.5rem;
-      color: #6200EA;
-      text-align: center;
-    }
+    /* 기존 스타일 그대로 유지 */
   </style>
   <script>
     window.onload = function() {
@@ -107,9 +17,9 @@
       }
     };
 
-    // 점 3개 버튼을 클릭할 때 settings.html로 이동하는 함수
-    function navigateToSettings() {
-      window.location.href = '/settings.html';
+    // 각 항목을 클릭할 때 해당 항목 이름을 settings.html로 전달하는 함수
+    function navigateToSettings(itemName) {
+      window.location.href = `/settings.html?item=${encodeURIComponent(itemName)}`;
     }
   </script>
 </head>
@@ -128,22 +38,22 @@
       <p>활성화된 IoT: <span id="active-iot">0</span></p>
     </div>
 
-    <!-- IoT 항목 섹션 (2개씩 2줄 배치) -->
+    <!-- IoT 항목 섹션 -->
     <div class="iot-section">
       <div class="iot-box">
-        <div class="dots" onclick="navigateToSettings()">⋮</div>
+        <div class="dots" onclick="navigateToSettings('거실')">⋮</div>
         <h3>거실</h3>
       </div>
       <div class="iot-box">
-        <div class="dots" onclick="navigateToSettings()">⋮</div>
+        <div class="dots" onclick="navigateToSettings('안방')">⋮</div>
         <h3>안방</h3>
       </div>
       <div class="iot-box">
-        <div class="dots" onclick="navigateToSettings()">⋮</div>
+        <div class="dots" onclick="navigateToSettings('독서실')">⋮</div>
         <h3>독서실</h3>
       </div>
       <div class="iot-box">
-        <div class="dots" onclick="navigateToSettings()">⋮</div>
+        <div class="dots" onclick="navigateToSettings('회사')">⋮</div>
         <h3>회사</h3>
       </div>
     </div>
