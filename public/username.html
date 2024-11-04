@@ -106,6 +106,11 @@
         document.getElementById('username').innerText = '알 수 없는 사용자';
       }
     };
+
+    // 점 3개 버튼을 클릭할 때 settings.html로 이동하는 함수
+    function navigateToSettings() {
+      window.location.href = '/settings.html';
+    }
   </script>
 </head>
 <body>
@@ -126,19 +131,19 @@
     <!-- IoT 항목 섹션 (2개씩 2줄 배치) -->
     <div class="iot-section">
       <div class="iot-box">
-        <div class="dots">⋮</div>
+        <div class="dots" onclick="navigateToSettings()">⋮</div>
         <h3>거실</h3>
       </div>
       <div class="iot-box">
-        <div class="dots">⋮</div>
+        <div class="dots" onclick="navigateToSettings()">⋮</div>
         <h3>안방</h3>
       </div>
       <div class="iot-box">
-        <div class="dots">⋮</div>
+        <div class="dots" onclick="navigateToSettings()">⋮</div>
         <h3>독서실</h3>
       </div>
       <div class="iot-box">
-        <div class="dots">⋮</div>
+        <div class="dots" onclick="navigateToSettings()">⋮</div>
         <h3>회사</h3>
       </div>
     </div>
