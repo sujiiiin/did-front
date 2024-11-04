@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import './App.css';
+//import './App.css';
 import kakaoLoginImage from './kakao_login_large_wide.png';
 
 const SocialKakao = () => {
