@@ -5,7 +5,108 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>설정 페이지</title>
   <style>
-    /* 기존 스타일 그대로 유지 */
+    /* body 스타일 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+
+    /* 전체 컨테이너 */
+    .container {
+      width: 402px;
+      height: 874px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* 항목 제목 */
+    .item-title {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    /* 입력 폼 스타일 */
+    .form-group {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    /* 체크박스 스타일 */
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    /* 페이지 하단 버튼 */
+    .button {
+      width: 100%;
+      padding: 15px;
+      font-size: 1rem;
+      color: #fff;
+      background-color: #6200EA;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: auto;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #3700B3;
+    }
+
+    /* 이전 버튼 스타일 */
+    .back-button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      color: #333;
+      background-color: #ccc;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #999;
+    }
   </style>
   <script>
     // URL 파라미터에서 항목 이름을 가져와서 표시하는 함수

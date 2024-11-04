@@ -50,6 +50,7 @@ const SocialKakao = () => {
         if (tokenData.access_token) {
           console.log("로그인 토큰 발급 성공");
           setKakaoToken(tokenData.access_token);
+          setCookie('kakaoToken', tokenData.access_token, 1); // 쿠키에 토큰 저장 (1일 동안 유지)
         } else {
           setErrorMessage(`토큰 발급 실패: ${JSON.stringify(tokenData)}`);
           console.error("로그인 토큰 발급 실패:", tokenData);
@@ -59,6 +60,13 @@ const SocialKakao = () => {
         setErrorMessage('토큰 발급 중 오류가 발생했습니다.');
       }
     }
+  };
+
+  // 쿠키 저장 함수
+  const setCookie = (name, value, days) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
   };
 
   const authenticateWithDID = async () => {
