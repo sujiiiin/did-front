@@ -1,3 +1,12 @@
+/* 화면 중앙 정렬을 위한 outer-container */
+.outer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
 /* App.css에 추가할 스타일 */
 .container {
   display: flex;
@@ -8,7 +17,7 @@
   height: 874px; /* iPhone 16 Pro 높이 고정 */
   background: linear-gradient(to right, #f0f0f0, #ffffff);
   font-family: 'Arial', sans-serif;
-  margin: 0 auto; /* 화면 중앙 정렬 */
+  
 }
 
 h1 {
