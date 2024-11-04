@@ -46,3 +46,29 @@ p {
   font-weight: bold;
   margin-top: 20px;
 }
+
+/* App.css */
+@media screen and (max-width: 1179px) {
+  .container {
+    padding: 20px;
+    height: 90vh;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  button {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+
+  img {
+    width: 250px; /* 카카오 로그인 이미지 크기 조정 */
+  }
+}
