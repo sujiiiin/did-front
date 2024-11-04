@@ -170,7 +170,7 @@ const SocialKakao = () => {
 
   return (
     <div className="container">
-      <h1>카카오 로그인 및 MetaMask DID 인증</h1>
+      <h1>캐치! 보안핑</h1>
   
       {/* 카카오 로그인 */}
       <img
