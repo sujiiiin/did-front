@@ -37,24 +37,18 @@
       text-align: center;
       font-size: 2.5rem;
       color: #333;
+      margin-bottom: 20px;
     }
 
-    /* 사용자 정보와 IoT 정보 영역 */
-    .info-section {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      margin-top: 20px;
-    }
-
+    /* 사용자 정보와 IoT 정보가 포함된 단일 카드 */
     .info-card {
-      flex: 1;
       background-color: white;
       border-radius: 8px;
       padding: 20px;
-      margin: 0 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       text-align: center;
+      width: 100%;
+      margin-bottom: 20px;
     }
 
     .info-card h2 {
@@ -64,18 +58,17 @@
 
     /* 하단 박스 영역 */
     .iot-section {
-      display: flex;
-      justify-content: space-around;
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* 2개씩 2줄 배치 */
+      gap: 15px;
       width: 100%;
       margin-bottom: 20px;
     }
 
     .iot-box {
-      flex: 1;
       background-color: white;
       border-radius: 8px;
-      padding: 15px;
-      margin: 0 10px;
+      padding: 20px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       text-align: center;
       position: relative;
@@ -122,20 +115,15 @@
     <!-- 헤더 -->
     <div class="header">캐치! 보안핑</div>
 
-    <!-- 사용자 정보와 IoT 정보 섹션 -->
-    <div class="info-section">
-      <div class="info-card">
-        <h2>이름</h2>
-        <p id="username">사용자 정보를 가져오는 중...</p>
-      </div>
-      <div class="info-card">
-        <h2>IoT 정보</h2>
-        <p>등록된 IoT: <span id="registered-iot">0</span></p>
-        <p>활성화된 IoT: <span id="active-iot">0</span></p>
-      </div>
+    <!-- 사용자 정보 및 IoT 정보가 포함된 단일 카드 -->
+    <div class="info-card">
+      <h2>사용자 정보</h2>
+      <p id="username">사용자 정보를 가져오는 중...</p>
+      <p>등록된 IoT: <span id="registered-iot">0</span></p>
+      <p>활성화된 IoT: <span id="active-iot">0</span></p>
     </div>
 
-    <!-- IoT 항목 섹션 -->
+    <!-- IoT 항목 섹션 (2개씩 2줄 배치) -->
     <div class="iot-section">
       <div class="iot-box">
         <div class="dots">⋮</div>
