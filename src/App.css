@@ -47,8 +47,15 @@ p {
   margin-top: 20px;
 }
 
-/* App.css */
+.kakao-login-image {
+  width: 300px;
+}
+
 @media screen and (max-width: 1179px) {
+  .kakao-login-image {
+    width: 250px; /* iPhone 16 Pro 크기 이하에서 이미지 크기 조정 */
+  }
+
   .container {
     padding: 20px;
     height: 90vh;
@@ -66,9 +73,5 @@ p {
 
   p {
     font-size: 1rem;
-  }
-
-  img {
-    width: 250px; /* 카카오 로그인 이미지 크기 조정 */
   }
 }

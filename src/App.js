@@ -171,28 +171,29 @@ const SocialKakao = () => {
   return (
     <div className="container">
       <h1>카카오 로그인 및 MetaMask DID 인증</h1>
-
+  
       {/* 카카오 로그인 */}
       <img
         src={kakaoLoginImage}
         alt="카카오 로그인"
         onClick={handleKakaoLogin}
-        style={{ cursor: 'pointer', width: '300px' }}
+        className="kakao-login-image" // class 추가
+        style={{ cursor: 'pointer' }} // 인라인 스타일에서 width 제거
       />
-
+  
       {/* MetaMask DID 인증 버튼은 카카오 토큰이 있을 때만 표시 */}
       {kakaoToken && !isAuthenticated && (
         <button onClick={authenticateWithDID}>MetaMask로 DID 인증</button>
       )}
-
+  
       {/* 인증된 DID 주소 표시 */}
       {isAuthenticated && <p>인증된 DID 주소: {userAddress}</p>}
-
+  
       {/* 로딩 상태 표시 */}
       {isLoading && <p>vcJwt를 가져오는 중입니다...</p>}
-
+  
       {/* 에러 메시지 표시 */}
-      {errorMessage && <p style={{color: 'red'}}>에러: {errorMessage}</p>}
+      {errorMessage && <p style={{ color: 'red' }}>에러: {errorMessage}</p>}
     </div>
   );
 };
