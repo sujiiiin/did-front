@@ -12,16 +12,16 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-color: #f0f0f0; /* 배경 회색 */
+      background-color: #f0f0f0;
       font-family: Arial, sans-serif;
       color: #333;
     }
 
     /* 전체 컨테이너 */
     .container {
-      width: 402px; /* 고정된 가로 크기 */
-      height: 874px; /* 고정된 세로 크기 */
-      background-color: #ffffff; /* 본문 흰색 */
+      width: 402px;
+      height: 874px;
+      background-color: #ffffff;
       border-radius: 15px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       display: flex;
@@ -59,7 +59,7 @@
     /* 하단 박스 영역 */
     .iot-section {
       display: grid;
-      grid-template-columns: 1fr 1fr; /* 2개씩 2줄 배치 */
+      grid-template-columns: 1fr 1fr;
       gap: 15px;
       width: 100%;
       margin-bottom: 20px;
@@ -111,6 +111,11 @@
     function navigateToSettings(itemName) {
       window.location.href = `/settings.html?item=${encodeURIComponent(itemName)}`;
     }
+
+    // 항목 추가 버튼을 클릭할 때 add-item.html로 이동
+    function navigateToAddItem() {
+      window.location.href = '/add-item.html';
+    }
   </script>
 </head>
 <body>
@@ -149,7 +154,7 @@
     </div>
 
     <!-- 플러스 버튼 -->
-    <div class="plus-button">➕ 항목 추가</div>
+    <div class="plus-button" onclick="navigateToAddItem()">➕ 항목 추가</div>
   </div>
 
 </body>

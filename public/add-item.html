@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>항목 추가</title>
+  <style>
+    /* body 스타일 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+
+    /* 전체 컨테이너 */
+    .container {
+      width: 402px;
+      height: 874px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* 항목 제목 */
+    .item-title {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    /* 입력 폼 스타일 */
+    .form-group {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    /* 체크박스 스타일 */
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    /* 페이지 하단 버튼 */
+    .button {
+      width: 100%;
+      padding: 15px;
+      font-size: 1rem;
+      color: #fff;
+      background-color: #6200EA;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: auto;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #3700B3;
+    }
+
+    /* 이전 버튼 스타일 */
+    .back-button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      color: #333;
+      background-color: #ccc;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #999;
+    }
+  </style>
+  <script>
+    // 이전 버튼을 눌렀을 때 username.html로 돌아가는 함수
+    function goBack() {
+      window.location.href = '/username.html';
+    }
+
+    // 네트워크 이름과 주소를 백엔드로 전송하는 함수
+    async function saveAndReturn() {
+      const networkName = document.getElementById('network-name').value;
+      const networkAddress = document.getElementById('network-address').value;
+
+      const data = {
+        networkName: networkName,
+        networkAddress: networkAddress,
+      };
+
+      try {
+        const response = await fetch('https://your-backend-url.com/api/saveNetwork', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          alert('항목이 성공적으로 추가되었습니다.');
+          window.location.href = '/username.html';
+        } else {
+          alert('항목 추가에 실패했습니다.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('서버 요청 중 오류가 발생했습니다.');
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <!-- 전체 컨테이너 -->
+  <div class="container">
+    <!-- 항목 제목 -->
+    <h2 class="item-title">항목 추가</h2>
+
+    <!-- 네트워크 이름 입력 -->
+    <div class="form-group">
+      <label for="network-name">네트워크 이름</label>
+      <input type="text" id="network-name" placeholder="네트워크 이름을 입력하세요">
+    </div>
+
+    <!-- 네트워크 주소 입력 -->
+    <div class="form-group">
+      <label for="network-address">네트워크 주소</label>
+      <input type="text" id="network-address" placeholder="네트워크 주소를 입력하세요">
+    </div>
+
+    <!-- 네트워크 활성화 체크박스 -->
+    <div class="checkbox-group">
+      <input type="checkbox" id="network-activation">
+      <label for="network-activation">네트워크 활성화</label>
+    </div>
+
+    <!-- 보안 활성화 체크박스 -->
+    <div class="checkbox-group">
+      <input type="checkbox" id="security-activation">
+      <label for="security-activation">보안 활성화</label>
+    </div>
+
+    <!-- 이전 버튼 -->
+    <button class="back-button" onclick="goBack()">이전</button>
+
+    <!-- 추가 버튼 -->
+    <button class="button" onclick="saveAndReturn()">추가</button>
+  </div>
+
+</body>
+</html>
