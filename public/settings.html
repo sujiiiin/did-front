@@ -131,10 +131,21 @@
     }
   </style>
   <script>
-    // 이전 버튼을 눌렀을 때 username.html로 돌아가는 함수
-    function goBack() {
-      window.location.href = '/username.html';
-    }
+    window.onload = function() {
+      // URL에서 item 파라미터 가져오기
+      const params = new URLSearchParams(window.location.search);
+      const itemName = params.get('item'); // "item" 파라미터 값을 가져옴
+
+      if (itemName) {
+        // 설정 항목 제목을 itemName으로 변경
+        document.querySelector('.item-title').innerText = `${itemName} 설정 항목`;
+      }
+
+      // 이전 버튼 동작 설정
+      document.getElementById('back-button').onclick = function() {
+        window.location.href = '/username.html';
+      };
+    };
 
     // 네트워크 이름과 주소를 백엔드로 전송하는 함수
     async function saveAndReturn() {
@@ -203,7 +214,7 @@
 
     <!-- 하단 버튼 영역 -->
     <div class="bottom-buttons">
-      <button class="back-button" onclick="goBack()">이전</button>
+      <button class="back-button" id="back-button">이전</button>
       <button class="button" onclick="saveAndReturn()">저장</button>
     </div>
   </div>
