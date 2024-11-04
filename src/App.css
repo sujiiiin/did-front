@@ -1,23 +1,25 @@
-/* 화면 중앙 정렬을 위한 outer-container */
-.outer-container {
+/* body 스타일 */
+body {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0; /* 전체 화면 배경색 */
+  font-family: 'Arial', sans-serif;
 }
 
-
-/* App.css에 추가할 스타일 */
+/* container 스타일 */
 .container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 402px; /* iPhone 16 Pro 너비 고정 */
-  height: 874px; /* iPhone 16 Pro 높이 고정 */
-  background: linear-gradient(to right, #f0f0f0, #ffffff);
-  font-family: 'Arial', sans-serif;
-  
+  width: 402px; /* 고정된 가로 크기 */
+  height: 874px; /* 고정된 세로 크기 */
+  background: #ffffff; /* 컨테이너 배경색 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 약간의 그림자 효과 */
+  border-radius: 8px; /* 모서리 둥글게 */
 }
 
 h1 {
@@ -60,7 +62,7 @@ p {
 
 .kakao-login-image {
   width: 300px;
-  cursor: pointer; /* 이미지에 커서 포인터 추가 */
+  cursor: pointer;
 }
 
 /* 작은 화면에 맞춘 반응형 스타일 */
