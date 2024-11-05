@@ -119,6 +119,12 @@
           }
         });
 
+        if (response.status === 401) {
+          alert("토큰이 만료되었습니다. 다시 로그인해 주세요.");
+          window.location.href = '/'; //초기 페이지로 리다이렉트
+          return;
+        }
+
         if (response.ok) {
           const data = await response.json();
 
