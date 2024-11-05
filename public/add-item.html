@@ -151,7 +151,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('vcJwt')}`
+            'Authorization': localStorage.getItem('vcJwt')
           },
           body: JSON.stringify(data),
         });
