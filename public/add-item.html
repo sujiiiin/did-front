@@ -156,22 +156,14 @@
           body: JSON.stringify(data),
         });
 
-        console.log("Response Status:", response.status);  // 상태 코드 확인
-
         if (response.status === 201) {
           alert('항목이 성공적으로 추가되었습니다.');
-
-          // 새 항목을 로컬 저장소에 저장
-          const networks = JSON.parse(localStorage.getItem('networks') || '[]');
-          networks.push(networkName);
-          localStorage.setItem('networks', JSON.stringify(networks));
-
-          // username.html로 이동
+          // 추가 성공 후 username.html로 이동
           window.location.href = '/username.html';
         } else if (response.status === 500) {
           alert('서버 오류로 인해 항목을 다시 등록하세요.');
-          // add-item.html로 다시 로드
-          window.location.href = '/add-item.html';
+          // 현재 페이지 새로 고침
+          window.location.reload();
         } else {
           alert(`예상치 못한 오류: 상태 코드 ${response.status}`);
         } 
