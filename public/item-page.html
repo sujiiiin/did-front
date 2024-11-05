@@ -75,34 +75,6 @@
       }
     };
 
-    // IoT 항목 업데이트 요청
-    async function updateIoT() {
-      const network = document.getElementById('item-name').innerText;
-      const ip = "네트워크의 IP 주소"; // IP 주소를 실제로 입력
-
-      try {
-        const response = await fetch('https://www.mongoljune.shop/updateiot/1', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': localStorage.getItem('vcJwt')  // vcJwt 토큰
-          },
-          body: JSON.stringify({ network, ip })
-        });
-
-        if (response.status === 200) {
-          alert('업데이트 성공');
-        } else if (response.status === 500) {
-          alert('업데이트 실패');
-        }
-        window.location.href = '/username.html';
-      } catch (error) {
-        console.error('Error:', error);
-        alert('서버 요청 중 오류가 발생했습니다.');
-        window.location.href = '/username.html';
-      }
-    }
-
     // 이전 버튼 기능: username.html로 이동
     function goBack() {
       window.location.href = '/username.html';
@@ -118,9 +90,6 @@
 
     <!-- 항목 이름 표시 -->
     <div class="item-name" id="item-name">항목 이름</div>
-
-    <!-- 업데이트 버튼 -->
-    <button class="back-button" onclick="updateIoT()">업데이트</button>
 
     <!-- 이전 버튼 -->
     <button class="back-button" onclick="goBack()">이전</button>
