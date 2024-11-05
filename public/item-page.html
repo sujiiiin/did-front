@@ -47,8 +47,8 @@
     }
 
     /* 버튼 스타일 */
-    .back-button {
-      margin-top: auto; /* 버튼을 아래쪽에 위치하게 */
+    .back-button, .connect-button {
+      margin-top: 10px;
       padding: 10px 20px;
       font-size: 1rem;
       color: #fff;
@@ -59,25 +59,56 @@
       transition: background-color 0.3s ease;
     }
 
-    .back-button:hover {
+    .back-button:hover, .connect-button:hover {
       background-color: #3700B3;
     }
   </style>
   <script>
-    window.onload = function() {
-      // URL에서 item 파라미터 가져오기
-      const params = new URLSearchParams(window.location.search);
-      const itemName = params.get('item'); // "item" 파라미터 값을 가져옴
+    let itemIp = ''; // IP 주소를 저장할 변수
 
-      if (itemName) {
-        // 항목 이름을 itemName으로 설정
-        document.getElementById('item-name').innerText = itemName;
+    window.onload = async function() {
+      const params = new URLSearchParams(window.location.search);
+      const itemId = params.get('id'); // "id" 파라미터 값을 가져옴
+
+      if (itemId) {
+        try {
+          // 백엔드에 GET 요청으로 데이터 가져오기
+          const response = await fetch(`https://www.mongoljune.shop/camera/${itemId}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': localStorage.getItem('vcJwt')
+            }
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            const itemName = result.network;
+            itemIp = result.ip; // IP 주소 저장
+
+            // 항목 이름 설정
+            document.getElementById('item-name').innerText = itemName;
+          } else {
+            alert("항목 데이터를 가져오는 중 오류가 발생했습니다.");
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert("서버 요청 중 오류가 발생했습니다.");
+        }
       }
     };
 
     // 이전 버튼 기능: username.html로 이동
     function goBack() {
       window.location.href = '/username.html';
+    }
+
+    // IP 주소로 접속
+    function connectToIp() {
+      if (itemIp) {
+        window.location.href = `http://${itemIp}`;
+      } else {
+        alert("IP 주소를 가져오는 중 오류가 발생했습니다.");
+      }
     }
   </script>
 </head>
@@ -90,6 +121,9 @@
 
     <!-- 항목 이름 표시 -->
     <div class="item-name" id="item-name">항목 이름</div>
+
+    <!-- IP 주소 접속 버튼 -->
+    <button class="connect-button" onclick="connectToIp()">IP 주소 접속</button>
 
     <!-- 이전 버튼 -->
     <button class="back-button" onclick="goBack()">이전</button>
