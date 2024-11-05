@@ -98,7 +98,7 @@
       text-align: center;
     }
   </style>
-   <script>
+  <script>
     window.onload = async function() {
       const username = localStorage.getItem('username');
       if (username) {
@@ -108,6 +108,7 @@
       }
 
       const iotSection = document.querySelector('.iot-section');
+      const localNetworks = JSON.parse(localStorage.getItem('networks') || '[]');
 
       try {
         // 백엔드에 GET 요청을 보내서 IoT 항목 가져오기
@@ -123,16 +124,18 @@
 
           // 데이터가 있을 경우, IoT 항목을 동적으로 생성
           if (data.listCount > 0) {
-            data.data.forEach(iot => {
-              const iotBox = document.createElement('div');
-              iotBox.className = 'iot-box';
-              iotBox.innerHTML = `
-                <div class="dots" onclick="event.stopPropagation(); navigateToSettings('${iot.network}')">⋮</div>
-                <h3>${iot.network}</h3>
-              `;
-              iotBox.onclick = () => navigateToItemPage(iot.network);
-              iotSection.appendChild(iotBox);
-            });
+            data.data
+              .filter(iot => localNetworks.includes(iot.network)) // 로컬 저장소에 있는 항목만 필터링
+              .forEach(iot => {
+                const iotBox = document.createElement('div');
+                iotBox.className = 'iot-box';
+                iotBox.innerHTML = `
+                  <div class="dots" onclick="event.stopPropagation(); navigateToSettings('${iot.network}')">⋮</div>
+                  <h3>${iot.network}</h3>
+                `;
+                iotBox.onclick = () => navigateToItemPage(iot.network);
+                iotSection.appendChild(iotBox);
+              });
           } else {
             // IoT 항목이 없을 때 메시지 표시
             iotSection.innerHTML = "<p>등록된 IoT 항목이 없습니다.</p>";
