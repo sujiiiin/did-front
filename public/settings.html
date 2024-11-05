@@ -167,7 +167,7 @@
           
           // localStorage에 있는 networks 목록 업데이트
           const networks = JSON.parse(localStorage.getItem('networks') || '[]');
-          const updatedNetworks = networks.map(name => name === originalItemName ? networkName : name);
+          const updatedNetworks = networks.map(name => name === oldItemName ? newItemName : name);
           localStorage.setItem('networks', JSON.stringify(updatedNetworks));
 
           window.location.href = '/username.html';
