@@ -156,6 +156,8 @@
           body: JSON.stringify(data),
         });
 
+        console.log("Response Status:", response.status);  // 상태 코드 확인
+
         if (response.status === 201) {
           alert('항목이 성공적으로 추가되었습니다.');
 
@@ -171,8 +173,8 @@
           // add-item.html로 다시 로드
           window.location.href = '/add-item.html';
         } else {
-          alert('예상치 못한 오류가 발생했습니다.');
-        }
+          alert(`예상치 못한 오류: 상태 코드 ${response.status}`);
+        } 
       } catch (error) {
         console.error('Error:', error);
         alert('서버 요청 중 오류가 발생했습니다.');
