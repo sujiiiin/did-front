@@ -45,6 +45,23 @@
       color: #555;
       margin: 20px 0;
     }
+
+    /* 버튼 스타일 */
+    .back-button {
+      margin-top: auto; /* 버튼을 아래쪽에 위치하게 */
+      padding: 10px 20px;
+      font-size: 1rem;
+      color: #fff;
+      background-color: #6200EA;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #3700B3;
+    }
   </style>
   <script>
     window.onload = function() {
@@ -57,6 +74,11 @@
         document.getElementById('item-name').innerText = itemName;
       }
     };
+
+    // 이전 버튼 기능: username.html로 이동
+    function goBack() {
+      window.location.href = '/username.html';
+    }
   </script>
 </head>
 <body>
@@ -68,6 +90,9 @@
 
     <!-- 항목 이름 표시 -->
     <div class="item-name" id="item-name">항목 이름</div>
+
+    <!-- 이전 버튼 -->
+    <button class="back-button" onclick="goBack()">이전</button>
   </div>
 
 </body>
