@@ -168,14 +168,16 @@
           localStorage.setItem('networks', JSON.stringify(updatedNetworks));
 
           window.location.href = '/username.html';
-        } else {
-          alert('업데이트 실패');
-          window.location.href = '/username.html';
-        }
-        
-      } catch (error) {
-        console.error('Error:', error);
-        alert('서버 요청 중 오류가 발생했습니다.');
+      } else {
+        const errorText = await response.text(); // 응답 본문에 포함된 오류 메시지 확인
+        console.error('서버 응답 오류:', errorText);
+        alert('업데이트 실패: ' + errorText);
+        window.location.href = '/username.html';
+      }
+
+    } catch (error) {
+      console.error('Error:', error);
+      alert('서버 요청 중 오류가 발생했습니다.');
       }
     }
   </script>
