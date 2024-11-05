@@ -137,6 +137,7 @@
 
       if (itemName) {
         document.querySelector('.item-title').innerText = `${itemName}`;
+        document.getElementById('network-name').value = itemName; // 네트워크 이름 입력 필드에 기존 이름 설정
       }
 
       document.getElementById('back-button').onclick = function() {
@@ -148,6 +149,8 @@
       const networkName = document.getElementById('network-name').value;
       const networkAddress = document.getElementById('network-address').value;
       const vcJwt = localStorage.getItem('vcJwt');
+      const params = new URLSearchParams(window.location.search);
+      const originalItemName = params.get('item'); // 기존 항목 이름 가져오기
 
       try {
         const response = await fetch('https://www.mongoljune.shop/updateiot/1', {
@@ -162,22 +165,22 @@
         if (response.status === 200) {
           alert('업데이트 성공');
           
-          // 성공 시, 새 항목 이름을 로컬 저장소에 저장하여 username.html에 반영
+          // localStorage에 있는 networks 목록 업데이트
           const networks = JSON.parse(localStorage.getItem('networks') || '[]');
-          const updatedNetworks = networks.map(name => name === itemName ? networkName : name);
+          const updatedNetworks = networks.map(name => name === originalItemName ? networkName : name);
           localStorage.setItem('networks', JSON.stringify(updatedNetworks));
 
           window.location.href = '/username.html';
-      } else {
-        const errorText = await response.text(); // 응답 본문에 포함된 오류 메시지 확인
-        console.error('서버 응답 오류:', errorText);
-        alert('업데이트 실패: ' + errorText);
-        window.location.href = '/username.html';
-      }
+        } else {
+          const errorText = await response.text();
+          console.error('서버 응답 오류:', errorText);
+          alert('업데이트 실패: ' + errorText);
+          window.location.href = '/username.html';
+        }
 
-    } catch (error) {
-      console.error('Error:', error);
-      alert('서버 요청 중 오류가 발생했습니다.');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('서버 요청 중 오류가 발생했습니다.');
       }
     }
   </script>
