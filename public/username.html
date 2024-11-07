@@ -188,22 +188,25 @@
           });
 
           if (response.ok) {
-            // 백엔드에서 받아온 IoT 카메라 URL을 가져와 리다이렉트
+            // JSON 응답에서 IoT 기기 URL을 가져옴
             const result = await response.json();
             const iotCameraUrl = result.url;
-            window.location.href = iotCameraUrl;
+
+            // 새 창에서 IoT 기기 URL로 연결
+            window.open(iotCameraUrl, '_blank');
           } else {
             console.error(`Error ${response.status}: ${response.statusText}`);
             alert("서버 요청 중 오류가 발생했습니다.");
           }
         } catch (error) {
-          console.error('Detailed error information:', error); // 네트워크 오류 상세 로그
+          console.error('Detailed error information:', error);
           alert("서버 요청 중 네트워크 오류가 발생했습니다. 자세한 오류는 콘솔에서 확인하세요.");
         }
       } else {
         alert("vcJwt 토큰 또는 itemId가 누락되었습니다.");
       }
     }
+
 
     function navigateToSettings(itemId) {
       // 설정 페이지로 이동하며 ID 전달
