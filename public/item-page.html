@@ -47,7 +47,7 @@
     }
 
     /* 버튼 스타일 */
-    .back-button {
+    .back-button, .connect-button {
       margin-top: 10px;
       padding: 10px 20px;
       font-size: 1rem;
@@ -59,7 +59,7 @@
       transition: background-color 0.3s ease;
     }
 
-    .back-button:hover {
+    .back-button:hover, .connect-button:hover {
       background-color: #3700B3;
     }
   </style>
@@ -75,18 +75,20 @@
       }
 
       if (itemId && vcJwt) {
-        // 백엔드에 vcJwt 토큰과 itemId만 전송 (URL 경로에 포함)
+        // 백엔드에 vcJwt 토큰과 itemId만 전송
         try {
           const response = await fetch(`https://www.mongoljune.shop/camera/${itemId}`, {
-            method: 'GET',
+            method: 'POST', // 백엔드에서 POST 요청을 허용하는지 확인
             headers: {
-              'Authorization': vcJwt
-            }
+              'Authorization': vcJwt,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: itemId })
           });
           
           if (!response.ok) {
             console.error(`Error ${response.status}: ${response.statusText}`);
-            alert(`서버 요청 중 오류가 발생했습니다. 상태 코드: ${response.status}`);
+            alert("서버 요청 중 오류가 발생했습니다.");
           }
         } catch (error) {
           console.error('Error:', error);
