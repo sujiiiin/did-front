@@ -47,7 +47,7 @@
     }
 
     /* 버튼 스타일 */
-    .back-button, .connect-button {
+    .back-button {
       margin-top: 10px;
       padding: 10px 20px;
       font-size: 1rem;
@@ -59,7 +59,7 @@
       transition: background-color 0.3s ease;
     }
 
-    .back-button:hover, .connect-button:hover {
+    .back-button:hover {
       background-color: #3700B3;
     }
   </style>
@@ -75,15 +75,13 @@
       }
 
       if (itemId && vcJwt) {
-        // 백엔드에 vcJwt 토큰과 itemId만 전송
+        // 백엔드에 vcJwt 토큰과 itemId만 전송 (URL 경로에 포함)
         try {
           const response = await fetch(`https://www.mongoljune.shop/camera/${itemId}`, {
-            method: 'POST', // 백엔드에서 POST 요청을 허용하는지 확인
+            method: 'GET',
             headers: {
-              'Authorization': vcJwt,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: itemId })
+              'Authorization': vcJwt
+            }
           });
           
           if (!response.ok) {
