@@ -144,6 +144,11 @@
         if (response.ok) {
           const result = await response.json();
           const data = result.data.filter(item => item.id); // id값이 있는 항목만 필터링
+          const listCount = result.listCount; // 백엔드에서 전달받은 listCount
+
+          // 등록된 IoT 개수와 활성화된 IoT 개수를 listCount로 설정
+          document.getElementById('registered-iot').innerText = listCount;
+          document.getElementById('active-iot').innerText = listCount;
 
           // 가져온 데이터를 바탕으로 버튼 생성
           iotSection.innerHTML = ""; // 기존 항목 초기화
