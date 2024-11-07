@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>캐치! 보안핑</title>
+  <style>
+    /* body 스타일 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+
+    /* 전체 컨테이너 */
+    .container {
+      width: 402px;
+      height: 874px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* 제목 스타일 */
+    .header-title {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* 로그 리스트 영역 */
+    .log-list {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      margin-top: 20px;
+      padding: 10px;
+      box-sizing: border-box;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 로그 항목 스타일 */
+    .log-item {
+      background-color: #ffffff;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .log-item h3 {
+      font-size: 1rem;
+      margin: 0 0 5px;
+      color: #333;
+    }
+
+    .log-item p {
+      font-size: 0.9rem;
+      margin: 0;
+      color: #666;
+    }
+
+    /* 이전 버튼 */
+    .back-button {
+      width: 100%;
+      padding: 15px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #fff;
+      background-color: #6200EA;
+      text-align: center;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .back-button:hover {
+      background-color: #3700B3;
+    }
+  </style>
+  <script>
+    window.onload = async function() {
+      // 네트워크 로그 데이터 가져오기
+      try {
+        const response = await fetch('https://www.mongoljune.shop/networklogs', {
+          method: 'GET',
+          headers: {
+            'Authorization': localStorage.getItem('vcJwt')
+          }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          const logs = result.data;
+
+          const logList = document.querySelector('.log-list');
+          logList.innerHTML = ''; // 기존 로그 초기화
+
+          // 로그 데이터로 리스트 항목 생성
+          logs.forEach(log => {
+            const logItem = document.createElement('div');
+            logItem.className = 'log-item';
+            logItem.innerHTML = `
+              <h3>시간: ${log.time}</h3>
+              <p>IP 주소: ${log.ip}</p>
+              <p>상태: ${log.status}</p>
+            `;
+            logList.appendChild(logItem);
+          });
+        } else {
+          alert("네트워크 로그를 가져오는 중 오류가 발생했습니다.");
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert("서버 요청 중 오류가 발생했습니다.");
+      }
+
+      document.getElementById('back-button').onclick = function() {
+        window.location.href = '/username.html';
+      };
+    };
+  </script>
+</head>
+<body>
+
+  <!-- 전체 컨테이너 -->
+  <div class="container">
+    <!-- 제목 영역 -->
+    <h2 class="header-title">캐치! 보안핑</h2>
+
+    <!-- 네트워크 로그 리스트 -->
+    <div class="log-list">
+      <p>네트워크 로그를 불러오는 중...</p> <!-- 기본 표시 내용 -->
+    </div>
+
+    <!-- 이전 버튼 -->
+    <button class="back-button" id="back-button">이전</button>
+  </div>
+
+</body>
+</html>

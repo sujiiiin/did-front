@@ -56,6 +56,29 @@
       margin-bottom: 10px;
     }
 
+    /* 보안성 스타일 */
+    .security-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .security-label {
+      font-size: 1rem;
+      margin-right: 10px;
+    }
+
+    .security-button {
+      background-color: #00C853; /* 초록색 */
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
     /* 하단 박스 영역 */
     .iot-section {
       display: grid;
@@ -158,6 +181,11 @@
     function navigateToAddItem() {
       window.location.href = '/add-item.html';
     }
+
+    function navigateToSecurityPage() {
+      // 보안성 페이지로 이동
+      window.location.href = '/security-page.html';
+    }
   </script>
 </head>
 <body>
@@ -168,6 +196,11 @@
       <p id="username">사용자 정보를 가져오는 중...</p>
       <p>등록된 IoT: <span id="registered-iot">0</span></p>
       <p>활성화된 IoT: <span id="active-iot">0</span></p>
+      <!-- 보안성 섹션 -->
+      <div class="security-section">
+        <span class="security-label">보안성</span>
+        <button class="security-button" onclick="navigateToSecurityPage()">확인</button>
+      </div>
     </div>
     <div class="iot-section"></div>
     <div class="plus-button" onclick="navigateToAddItem()">➕ 항목 추가</div>
