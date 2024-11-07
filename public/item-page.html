@@ -67,7 +67,6 @@
     window.onload = async function() {
       const params = new URLSearchParams(window.location.search);
       const itemName = params.get('item'); // URL에서 item 이름 가져오기
-      const itemIp = params.get('ip'); // URL에서 IP 주소 가져오기
       const itemId = params.get('id'); // URL에서 ID 가져오기
       const vcJwt = localStorage.getItem('vcJwt'); // vcJwt 토큰 가져오기
 
@@ -76,13 +75,15 @@
       }
 
       if (itemId && vcJwt) {
-        // 백엔드에 vcJwt 토큰을 보내기만 함 (응답 내용은 사용하지 않음)
+        // 백엔드에 vcJwt 토큰과 itemId만 전송
         try {
           const response = await fetch(`https://www.mongoljune.shop/camera/${itemId}`, {
-            method: 'GET',
+            method: 'POST', // 백엔드에서 POST 요청을 허용하는지 확인
             headers: {
-              'Authorization': vcJwt
-            }
+              'Authorization': vcJwt,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: itemId })
           });
           
           if (!response.ok) {
@@ -96,17 +97,6 @@
       }
     };
 
-    // IP 주소로 접속
-    function connectToIp() {
-      const params = new URLSearchParams(window.location.search);
-      const itemIp = params.get('ip'); // URL에서 IP 주소 가져오기
-      if (itemIp) {
-        window.location.href = `http://${itemIp}`;
-      } else {
-        alert("IP 주소를 가져오는 중 오류가 발생했습니다.");
-      }
-    }
-
     // 이전 버튼 기능: username.html로 이동
     function goBack() {
       window.location.href = '/username.html';
@@ -117,7 +107,6 @@
   <div class="container">
     <div class="header">캐치! 보안핑</div>
     <div class="item-name" id="item-name">항목 이름</div>
-    <button class="connect-button" onclick="connectToIp()">IP 주소 접속</button>
     <button class="back-button" onclick="goBack()">이전</button>
   </div>
 </body>
