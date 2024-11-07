@@ -193,7 +193,7 @@
           }
           // 성공적인 응답이면 백엔드에서 리다이렉트를 처리
         } catch (error) {
-          console.error('Network or server error:', error);
+          console.error('Detailed error information:', error); // 네트워크 오류 상세 로그
           alert("서버 요청 중 네트워크 오류가 발생했습니다. 자세한 오류는 콘솔에서 확인하세요.");
         }
       } else {
