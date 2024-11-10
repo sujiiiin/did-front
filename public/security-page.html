@@ -95,11 +95,8 @@
     window.onload = async function() {
       // 네트워크 로그 데이터 가져오기
       try {
-        const response = await fetch('https://www.mongoljune.shop/networklogs', {
-          method: 'GET',
-          headers: {
-            'Authorization': localStorage.getItem('vcJwt')
-          }
+        const response = await fetch('https://www.mongoljune.shop/block', {
+          method: 'GET'
         });
 
         if (response.ok) {
@@ -114,9 +111,9 @@
             const logItem = document.createElement('div');
             logItem.className = 'log-item';
             logItem.innerHTML = `
-              <h3>시간: ${log.time}</h3>
+              <h3>차단된 시간: ${log.createdAt}</h3>
               <p>IP 주소: ${log.ip}</p>
-              <p>상태: ${log.status}</p>
+              <p>상태: 차단됨</p>
             `;
             logList.appendChild(logItem);
           });
