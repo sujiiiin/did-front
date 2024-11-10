@@ -99,6 +99,7 @@
             console.log("IoT Camera Address:", iotCameraAddress); // address 값 확인
 
             if (iotCameraAddress) {
+              console.log("Opening IoT Camera Address:", iotCameraAddress);
               window.open(iotCameraAddress, '_blank'); // 새 창에서 주소 열기
             } else {
               console.error("서버 응답에 주소 값이 없습니다.", result);
