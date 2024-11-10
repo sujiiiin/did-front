@@ -101,7 +101,7 @@
 
         if (response.ok) {
           const result = await response.json();
-          const logs = result.data;
+          const logs = result;
 
           const logList = document.querySelector('.log-list');
           logList.innerHTML = ''; // 기존 로그 초기화
@@ -111,7 +111,7 @@
             const logItem = document.createElement('div');
             logItem.className = 'log-item';
             logItem.innerHTML = `
-              <h3>차단된 시간: ${log.createdAt}</h3>
+              <h3>차단된 시간: ${new Date(log.createdAt).toLocaleString()}</h3>
               <p>IP 주소: ${log.ip}</p>
               <p>상태: 차단됨</p>
             `;
