@@ -91,7 +91,7 @@
             const result = await response.json();
             const iotCameraAddress = result.address; // 백엔드에서 보내준 주소
             if (iotCameraAddress) {
-              window.open(iotCameraAddress, '_blank'); // 새 창에서 주소 열기
+              window.open(iotCameraAddress); // 새 창에서 주소 열기
             } else {
               alert("서버에서 유효한 주소를 받지 못했습니다.");
             }
