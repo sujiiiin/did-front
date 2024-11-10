@@ -89,10 +89,14 @@
           if (response.ok) {
             // JSON 응답에서 IoT 카메라 주소를 가져와 새 창에서 열기
             const result = await response.json();
+            console.log("응답 데이터:", result); // 응답 데이터 로그 출력
+
             const iotCameraAddress = result.address; // 백엔드에서 보내준 주소
             if (iotCameraAddress) {
-              window.location.href(iotCameraAddress); // 새 창에서 주소 열기
+              console.log("열릴 주소:", iotCameraAddress); // 열릴 주소 로그 출력
+              window.open(iotCameraAddress, '_blank'); // 새 창에서 주소 열기
             } else {
+              console.error("응답에 주소 값이 없습니다.", result);
               alert("서버에서 유효한 주소를 받지 못했습니다.");
             }
           } else {
@@ -103,6 +107,8 @@
           console.error('Error:', error);
           alert("서버 요청 중 오류가 발생했습니다.");
         }
+      } else {
+        alert("유효한 itemId 또는 vcJwt 토큰이 없습니다.");
       }
     };
 
