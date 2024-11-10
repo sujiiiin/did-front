@@ -87,12 +87,10 @@
             const result = await response.json();
             const iotCameraAddress = result.address;
             console.log("IoT Camera Address:", iotCameraAddress);
+          
+            window.open("http://222.118.185.155:9000");
 
-            if (iotCameraAddress) {
-              window.open("http://222.118.185.155:9000");
-            } else {
-              alert("서버에서 유효한 주소를 받지 못했습니다.");
-            }
+          
           } else {
             alert("서버 요청 중 오류가 발생했습니다.");
           }
