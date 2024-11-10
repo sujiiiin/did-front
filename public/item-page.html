@@ -65,10 +65,14 @@
   </style>
   <script>
     window.onload = async function() {
+      console.log("Page loaded and script running"); // 확인용 로그
+
       const params = new URLSearchParams(window.location.search);
       const itemName = params.get('item'); // URL에서 item 이름 가져오기
       const itemId = params.get('id'); // URL에서 ID 가져오기
       const vcJwt = localStorage.getItem('vcJwt'); // vcJwt 토큰 가져오기
+
+      console.log("itemName:", itemName, "itemId:", itemId, "vcJwt:", vcJwt); // 파라미터 확인
 
       if (itemName) {
         document.getElementById('item-name').innerText = itemName;
@@ -76,26 +80,36 @@
 
       if (itemId && vcJwt) {
         try {
-          // GET 요청으로 백엔드에 itemId와 vcJwt 전송
+          // 백엔드에 GET 요청 전송
+          console.log("Sending GET request to backend");
           const response = await fetch(`https://www.mongoljune.shop/camera/${itemId}`, {
             method: 'GET',
             headers: {
               'Authorization': vcJwt
             }
           });
-          
+
+          console.log("Response status:", response.status); // 응답 상태 확인
+
           if (response.ok) {
             const result = await response.json();
-            const iotCameraAddress = result.address; // 백엔드에서 보내준 주소
+            console.log("Response data:", result); // 전체 응답 로그
+
+            const iotCameraAddress = result.address; // 백엔드에서 받은 address 값
+            console.log("IoT Camera Address:", iotCameraAddress); // address 값 확인
+
             if (iotCameraAddress) {
-              window.location.href(iotCameraAddress); // 새 창에서 주소 열기
+              window.open(iotCameraAddress, '_blank'); // 새 창에서 주소 열기
             } else {
+              console.error("서버 응답에 주소 값이 없습니다.", result);
               alert("서버에서 유효한 주소를 받지 못했습니다.");
             }
           } else {
+            console.error(`Error ${response.status}: ${response.statusText}`);
             alert("서버 요청 중 오류가 발생했습니다.");
           }
         } catch (error) {
+          console.error('Network Error:', error);
           alert("서버 요청 중 오류가 발생했습니다.");
         }
       } else {
