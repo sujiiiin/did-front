@@ -65,13 +65,10 @@
   </style>
   <script>
     window.onload = async function() {
-      console.log("window.onload triggered"); // window.onload가 실행되는지 확인
-
       const params = new URLSearchParams(window.location.search);
       const itemName = params.get('item'); // URL에서 item 이름 가져오기
       const itemId = params.get('id'); // URL에서 ID 가져오기
       const vcJwt = localStorage.getItem('vcJwt'); // vcJwt 토큰 가져오기
-      console.log("Item name:", itemName, "Item ID:", itemId, "vcJwt:", vcJwt); // URL과 로컬스토리지 값 확인
 
       if (itemName) {
         document.getElementById('item-name').innerText = itemName;
@@ -79,37 +76,26 @@
 
       if (itemId && vcJwt) {
         try {
-          // 백엔드에 vcJwt 토큰과 itemId 전송
-          console.log("Sending request to backend...");
+          // GET 요청으로 백엔드에 itemId와 vcJwt 전송
           const response = await fetch(`https://www.mongoljune.shop/camera/${itemId}`, {
             method: 'GET',
             headers: {
-              'Authorization': vcJwt,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: itemId })
+              'Authorization': vcJwt
+            }
           });
-
-          console.log("Response status:", response.status); // 응답 상태 로그
           
           if (response.ok) {
             const result = await response.json();
-            console.log("응답 데이터:", result); // 응답 데이터 로그 출력
-
             const iotCameraAddress = result.address; // 백엔드에서 보내준 주소
             if (iotCameraAddress) {
-              console.log("열릴 주소:", iotCameraAddress); // 열릴 주소 로그 출력
               window.open(iotCameraAddress, '_blank'); // 새 창에서 주소 열기
             } else {
-              console.error("응답에 주소 값이 없습니다.", result);
               alert("서버에서 유효한 주소를 받지 못했습니다.");
             }
           } else {
-            console.error(`Error ${response.status}: ${response.statusText}`);
             alert("서버 요청 중 오류가 발생했습니다.");
           }
         } catch (error) {
-          console.error('Error:', error);
           alert("서버 요청 중 오류가 발생했습니다.");
         }
       } else {
