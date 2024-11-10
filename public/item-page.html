@@ -16,8 +16,6 @@
       font-family: Arial, sans-serif;
       color: #333;
     }
-
-    /* 전체 컨테이너 */
     .container {
       width: 402px;
       height: 874px;
@@ -30,23 +28,17 @@
       padding: 20px;
       box-sizing: border-box;
     }
-
-    /* 헤더 스타일 */
     .header {
       text-align: center;
       font-size: 2.5rem;
       color: #333;
       margin-bottom: 20px;
     }
-
-    /* 항목 이름 스타일 */
     .item-name {
       font-size: 1.8rem;
       color: #555;
       margin: 20px 0;
     }
-
-    /* 버튼 스타일 */
     .back-button {
       margin-top: 10px;
       padding: 10px 20px;
@@ -58,21 +50,22 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
     .back-button:hover {
       background-color: #3700B3;
     }
   </style>
-  <script>
+  <script defer>
+    console.log("Script is loaded and running"); // 확인용 기본 로그
+
     window.onload = async function() {
-      console.log("Page loaded and script running"); // 확인용 로그
+      console.log("Page loaded and script running");
 
       const params = new URLSearchParams(window.location.search);
       const itemName = params.get('item'); // URL에서 item 이름 가져오기
       const itemId = params.get('id'); // URL에서 ID 가져오기
       const vcJwt = localStorage.getItem('vcJwt'); // vcJwt 토큰 가져오기
 
-      console.log("itemName:", itemName, "itemId:", itemId, "vcJwt:", vcJwt); // 파라미터 확인
+      console.log("itemName:", itemName, "itemId:", itemId, "vcJwt:", vcJwt);
 
       if (itemName) {
         document.getElementById('item-name').innerText = itemName;
@@ -80,7 +73,6 @@
 
       if (itemId && vcJwt) {
         try {
-          // 백엔드에 GET 요청 전송
           console.log("Sending GET request to backend");
           const response = await fetch(`https://www.mongoljune.shop/camera/${itemId}`, {
             method: 'GET',
@@ -89,24 +81,19 @@
             }
           });
 
-          console.log("Response status:", response.status); // 응답 상태 확인
+          console.log("Response status:", response.status);
 
           if (response.ok) {
             const result = await response.json();
-            console.log("Response data:", result); // 전체 응답 로그
-
-            const iotCameraAddress = result.address; // 백엔드에서 받은 address 값
-            console.log("IoT Camera Address:", iotCameraAddress); // address 값 확인
+            const iotCameraAddress = result.address;
+            console.log("IoT Camera Address:", iotCameraAddress);
 
             if (iotCameraAddress) {
-              console.log("Opening IoT Camera Address:", iotCameraAddress);
-              window.open(iotCameraAddress, '_blank'); // 새 창에서 주소 열기
+              window.open(iotCameraAddress, '_blank');
             } else {
-              console.error("서버 응답에 주소 값이 없습니다.", result);
               alert("서버에서 유효한 주소를 받지 못했습니다.");
             }
           } else {
-            console.error(`Error ${response.status}: ${response.statusText}`);
             alert("서버 요청 중 오류가 발생했습니다.");
           }
         } catch (error) {
@@ -118,7 +105,6 @@
       }
     };
 
-    // 이전 버튼 기능: username.html로 이동
     function goBack() {
       window.location.href = '/username.html';
     }
