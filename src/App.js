@@ -13,6 +13,7 @@ const SocialKakao = () => {
 
   const Rest_api_key = process.env.REACT_APP_KAKAO_REST_API_KEY;
   const redirect_uri = process.env.REACT_APP_REDIRECT_URI;
+  const serviceAdminKey = process.env.REACT_APP_SERVICE_APP_ADMIN_KEY;
 
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
 
@@ -26,7 +27,7 @@ const SocialKakao = () => {
         const response = await fetch('https://kapi.kakao.com/v1/user/unlink', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${kakaoToken}`,
+            'Authorization': `KakaoAK ${serviceAdminKey}`,
             'Content-Type': 'application/x-www-form-urlencoded',
           },
         });
