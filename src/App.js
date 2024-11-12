@@ -20,32 +20,161 @@ const SocialKakao = () => {
     window.location.href = kakaoURL;
   };
 
-  const handleKakaoLogout = async (access_token) => {
-    try {
-      const response = await fetch('https://kapi.kakao.com/v1/user/unlink', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${access_token}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-
-      if (response.ok) {
-        console.log('카카오 로그아웃 성공');
-        setKakaoToken(null); // 토큰 초기화
-        setIsAuthenticated(false); // 인증 상태 초기화
-        setUserAddress(''); // DID 주소 초기화
-        localStorage.removeItem('vcJwt'); // 로컬 스토리지에서 vcJwt 제거
-        localStorage.removeItem('username'); // 로컬 스토리지에서 username 제거
-      } else {
-        console.error('카카오 로그아웃 실패:', response.statusText);
-        setErrorMessage('카카오 로그아웃 중 문제가 발생했습니다.');
-      }
-    } catch (error) {
-      console.error('카카오 로그아웃 중 오류 발생:', error);
-      setErrorMessage('카카오 로그아웃 중 오류가 발생했습니다.');
+  const extractAuthCode = () => {
+    const code = new URL(window.location.href).searchParams.get("code");
+    if (code) {
+      setAuthCode(code);
+      console.log('인가 코드 추출 성공:', code);
+    } else {
+      console.log('인가 코드가 없습니다.');
     }
   };
+
+  const requestKakaoToken = async () => {
+    if (authCode) {
+      try {
+        const tokenResponse = await fetch('https://kauth.kakao.com/oauth/token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            grant_type: 'authorization_code',
+            client_id: Rest_api_key,
+            redirect_uri: redirect_uri,
+            code: authCode,
+          }),
+        });
+
+        const tokenData = await tokenResponse.json();
+        if (tokenData.access_token) {
+          console.log("로그인 토큰 발급 성공");
+          setKakaoToken(tokenData.access_token);
+          setCookie('kakaoToken', tokenData.access_token, 1); // 쿠키에 토큰 저장 (1일 동안 유지)
+        } else {
+          setErrorMessage(`토큰 발급 실패: ${JSON.stringify(tokenData)}`);
+          console.error("로그인 토큰 발급 실패:", tokenData);
+        }
+      } catch (error) {
+        console.error("토큰 발급 중 오류 발생:", error);
+        setErrorMessage('토큰 발급 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
+  // 쿠키 저장 함수
+  const setCookie = (name, value, days) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  };
+
+  const authenticateWithDID = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+        const address = await signer.getAddress();
+        setUserAddress(address);
+        setIsAuthenticated(true);
+        alert(`DID 인증 성공: ${address}`);
+
+        if (kakaoToken) {
+          sendAuthDataToBackend(address, kakaoToken); // DID 주소와 토큰을 함께 전송
+        }
+      } catch (error) {
+        console.error("DID 인증 실패:", error);
+        alert('DID 인증 실패');
+      }
+    } else {
+      alert('MetaMask가 설치되어 있지 않습니다. MetaMask 설치 페이지로 이동합니다.');
+      window.location.href = 'https://metamask.io/download.html';
+    }
+  };
+
+  const sendAuthDataToBackend = async (userDid, userToken) => {
+    setIsLoading(true); // 로딩 상태 시작
+    try {
+      const response = await fetch('https://www.mongoljune.shop/issue-vc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userDid: userDid,
+          userToken: userToken,
+        }),
+      });
+
+      const data = await response.json();
+      console.log('백엔드 응답 데이터:', data);
+
+      if (data.vcJwt) {
+        console.log('DID 주소와 토큰이 성공적으로 백엔드로 전송되었습니다.');
+        
+        // vcJwt를 Local Storage에 저장
+        localStorage.setItem('vcJwt', data.vcJwt);
+
+        // vcJwt 검증 함수 호출
+        verifyVcJwt(data.vcJwt);
+      } else {
+        console.error('백엔드 처리 실패:', data.message || '알 수 없는 오류');
+      }
+    } catch (error) {
+      console.error('백엔드 서버 전송 중 오류:', error);
+    } finally {
+      setIsLoading(false); // 로딩 상태 종료
+    }
+  };
+
+  const verifyVcJwt = async (vcJwt) => {
+    try {
+      const response = await fetch('https://www.mongoljune.shop/verify-vc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ vcJwt: vcJwt }),
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log("vcJwt 검증 성공");
+
+        // username을 Local Storage에 저장
+        localStorage.setItem('username', data.username);
+
+        // 새로운 페이지로 리다이렉트
+        window.location.href = "/username.html";
+      } else if (response.status === 500) {
+        console.error("vcJwt 검증 실패: 다시 로그인해야 합니다.");
+        
+        // Local Storage 값 제거
+        localStorage.removeItem('vcJwt');
+        localStorage.removeItem('username');
+        
+        // 페이지 새로 고침하여 처음부터 다시 시작
+        window.location.reload();
+      } else {
+        console.error("예상치 못한 오류 발생");
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
+      }
+    } catch (error) {
+      console.error("vcJwt 검증 중 오류 발생:", error);
+      setErrorMessage("vcJwt 검증 중 오류가 발생했습니다.");
+    }
+  };
+
+  useEffect(() => {
+    extractAuthCode();
+  }, []);
+
+  useEffect(() => {
+    if (authCode) {
+      requestKakaoToken();
+    }
+  }, [authCode]);
 
   return (
     <div className="container">
@@ -56,8 +185,8 @@ const SocialKakao = () => {
         src={kakaoLoginImage}
         alt="카카오 로그인"
         onClick={handleKakaoLogin}
-        className="kakao-login-image"
-        style={{ cursor: 'pointer' }}
+        className="kakao-login-image" // class 추가
+        style={{ cursor: 'pointer' }} // 인라인 스타일에서 width 제거
       />
   
       {/* MetaMask DID 인증 버튼은 카카오 토큰이 있을 때만 표시 */}
@@ -67,11 +196,6 @@ const SocialKakao = () => {
   
       {/* 인증된 DID 주소 표시 */}
       {isAuthenticated && <p>인증된 DID 주소: {userAddress}</p>}
-
-      {/* 카카오 로그아웃 버튼 */}
-      {kakaoToken && (
-        <button onClick={() => handleKakaoLogout(kakaoToken)}>카카오 로그아웃</button>
-      )}
   
       {/* 로딩 상태 표시 */}
       {isLoading && <p>vcJwt를 가져오는 중입니다...</p>}
