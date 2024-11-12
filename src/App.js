@@ -21,16 +21,14 @@ const SocialKakao = () => {
   };
 
   const handleKakaoLogout = async (access_token) => {
-    const options = {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${access_token}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    };
-
     try {
-      const response = await fetch('https://kapi.kakao.com/v1/user/unlink', options);
+      const response = await fetch('https://kapi.kakao.com/v1/user/unlink', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${access_token}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
 
       if (response.ok) {
         console.log('카카오 로그아웃 성공');
